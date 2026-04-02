@@ -340,6 +340,19 @@ input[type=file]{display:none;}
   <!-- Animated flowers floating in header -->
   <div class="hdr-flowers-anim" id="hdrF"></div>
 
+  <!-- MUSIC BUTTON -->
+  <div id="music-btn-wrap" style="margin-bottom:10px;animation:fadeUp .8s .1s both;">
+    <button id="music-btn" onclick="startMusic()" style="
+      background:linear-gradient(135deg,#f090bc,#e060a0);
+      border:none;border-radius:50px;
+      color:white;font-family:'Dancing Script',cursive;font-size:1.1rem;
+      padding:10px 22px;cursor:pointer;
+      box-shadow:0 4px 18px rgba(200,56,120,.35);
+      animation:waPulse 2s ease-in-out infinite;
+      display:flex;align-items:center;gap:8px;margin:0 auto;
+    ">🎵 Lance la magie !</button>
+  </div>
+
   <div class="hdr-title">Aïna's First Birthday</div>
   <div class="hdr-sub">✨ Notre cadeau du ciel nous a rejoint il y a 1 an ✨</div>
 
@@ -909,8 +922,11 @@ input[type=file]{display:none;}
 
   </div>
   <div class="tb-foot">🌼 Eh-oh ! On vous attend ! 🌼</div>
-  <div style="text-align:left;padding:6px 18px 14px;background:linear-gradient(180deg,#90c840 0%,#78b030 100%);">
-    <span style="font-family:'Dancing Script',cursive;font-size:.85rem;color:rgba(255,255,255,.85);letter-spacing:.5px;">Locklan et Yasmine 💕</span>
+  <div style="text-align:center;padding:4px 18px 6px;background:linear-gradient(180deg,#a0d850 0%,#90c840 100%);">
+    <span style="font-family:'Quicksand',sans-serif;font-size:.7rem;color:rgba(255,255,255,.95);font-weight:600;letter-spacing:.3px;">👆 Appuie sur les Télétubbies !</span>
+  </div>
+  <div style="position:relative;padding:6px 18px 14px;background:linear-gradient(180deg,#90c840 0%,#78b030 100%);">
+    <span style="position:absolute;bottom:6px;right:14px;font-family:'Dancing Script',cursive;font-size:.72rem;color:rgba(255,255,255,.75);letter-spacing:.3px;">Locklan et Yasmine</span>
   </div>
 </div>
 
@@ -992,7 +1008,7 @@ function tubbyAnim(id){
   tubbyTimers[id] = setTimeout(()=>{
     el.classList.remove(tubbyAnims[id]);
     bubble.classList.remove('show');
-  }, 2800);
+  }, 1400);
 }
 
 // ── COUNTDOWN ──
@@ -1024,26 +1040,16 @@ function tubbyAnim(id){
   const ctx = new (window.AudioContext || window.webkitAudioContext)();
   const C4=261.63,D4=293.66,E4=329.63,F4=349.23,G4=392,A4=440,B4=493.88;
   const C5=523.25,D5=587.33,E5=659.25,F5=698.46,G5=783.99,A5=880,B5=987.77;
-  // "Tinky Winky, Dipsy, Laa-Laa, Po! Teletubbies, Teletubbies, say hello! Eh-oh!"
+  // Happy Birthday to You
   const melody = [
-    // Tinky Winky,
-    {f:G4,d:.22},{f:A4,d:.22},{f:G4,d:.22},{f:E4,d:.22},{f:G4,d:.45},
-    // Dipsy,
-    {f:A4,d:.22},{f:G4,d:.22},{f:E4,d:.45},
-    // Laa-Laa,
-    {f:G4,d:.22},{f:A4,d:.22},{f:G4,d:.22},{f:E4,d:.45},
-    // Po!
-    {f:C5,d:.55},
-    // Teletubbies,
-    {f:B4,d:.22},{f:A4,d:.22},{f:G4,d:.22},{f:A4,d:.22},{f:B4,d:.22},{f:A4,d:.45},
-    // Teletubbies,
-    {f:B4,d:.22},{f:A4,d:.22},{f:G4,d:.22},{f:A4,d:.22},{f:B4,d:.22},{f:A4,d:.45},
-    // say hello!
-    {f:G4,d:.22},{f:A4,d:.22},{f:B4,d:.22},{f:C5,d:.65},
-    // Eh-
-    {f:E5,d:.35},
-    // oh!
-    {f:C5,d:.9},
+    // Happy Birth-day to you
+    {f:C4,d:.22},{f:C4,d:.12},{f:D4,d:.35},{f:C4,d:.35},{f:F4,d:.35},{f:E4,d:.7},
+    // Happy Birth-day to you
+    {f:C4,d:.22},{f:C4,d:.12},{f:D4,d:.35},{f:C4,d:.35},{f:G4,d:.35},{f:F4,d:.7},
+    // Happy Birth-day dear Aï-na
+    {f:C4,d:.22},{f:C4,d:.12},{f:C5,d:.35},{f:A4,d:.35},{f:F4,d:.35},{f:E4,d:.35},{f:D4,d:.7},
+    // Happy Birth-day to you
+    {f:B4,d:.22},{f:B4,d:.12},{f:A4,d:.35},{f:F4,d:.35},{f:G4,d:.35},{f:F4,d:.9},
   ];
   function playNote(freq, startTime, duration){
     const o = ctx.createOscillator();
@@ -1070,8 +1076,13 @@ function tubbyAnim(id){
   }
   let played = false;
   function tryPlay(){ if(played) return; played=true; ctx.resume().then(playMelody); }
-  setTimeout(()=>{ ctx.resume().then(()=>{ if(ctx.state==='running'){ played=true; playMelody(); } }); }, 1000);
-  document.addEventListener('click', tryPlay, {once:true});
+  window.startMusic = function(){
+    const btn = document.getElementById('music-btn-wrap');
+    if(btn) btn.style.display='none';
+    tryPlay();
+  };
+  setTimeout(()=>{ ctx.resume().then(()=>{ if(ctx.state==='running'){ played=true; playMelody(); if(document.getElementById('music-btn-wrap')) document.getElementById('music-btn-wrap').style.display='none'; } }); }, 1000);
+  document.addEventListener('click', function(e){ if(e.target.id!=='music-btn') tryPlay(); }, {once:true});
 })();
 
 (function(){
